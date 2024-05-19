@@ -5,34 +5,185 @@
   <title>Web Sprint 2 Challenge</title>
   <script id="challenge">
     // 👉 CHALLENGE 1
+
+
+
     function profileActivation(profile, reason) {
+      if (profile.active) {
+        if (reason === undefined) {
+          return "confirm status manually"
+        } else {
+          profile.active = false
+          profile.reason = reason
+        }
+      } else {
+        profile.active = true
+        delete profile.reason
+      }
+      return profile
 
     }
+
+
+
+
+
 
     // 👉 CHALLENGE 2
     function mineSweeper(grid, x, y) {
+      if (x < 1 || x > 3 || y < 1 || y > 3) {
+        return "invalid coordinates"
+      }
+      const cell = grid[y - 1][x - 1]
+      // console.log({grid, x, y})
 
+      if (cell === "🟥") {
+        return "🟥 💀"
+      } else if (cell === "🟦") {
+        return "🟦 🥳"
+      }
     }
+
+
+
+
+
+
+
+
 
     // 👉 CHALLENGE 3
     function booleanize(obj) {
+      // let obj = {
+      //   key1: 0,
+      //   key2: 1,
+      //   key3: null,
+      //   key4: 2
+      // };
 
+
+
+      for (let key in obj) {
+        // If any property name exceeds 9 characters, return the string "shorten all prop names to 9 chars or less".
+        if (key.length > 9) {
+          return "shorten all prop names to 9 chars or less";
+        }
+
+        // Transform any value of zero (0) into the boolean false.
+        if (obj[key] === 0) {
+          obj[key] = false;
+        }
+        // Transform any value of one (1) into the boolean true.
+        else if (obj[key] === 1) {
+          obj[key] = true;
+        }
+        // If a value is null, delete the entire key-value pair from the object.
+        else if (obj[key] === null) {
+          delete obj[key];
+        }
+      }
+      return obj;
     }
 
+
     // 👉 CHALLENGE 4
+    function replaceForbiddenWords(text, forbidden) {
+      const words = text.split(" ");
+
+      const replacedText = words.map(word => {
+        if (forbidden.includes(word)) {
+          return "x".repeat(word.length);
+        }
+        return word;
+      }).join(" ");
+
+      return replacedText;
+    }
+
+    function removePunch(text, punctuation) {
+      const words = text.split(" ");
+
+      const removedText = words.map(word => {
+        if (punctuation.includes(word)) {
+          return "";
+        }
+        return word;
+      }).join(" ");
+
+      return removedText;
+    }
+
+
     function scrub(text, forbidden) {
+      let punctuation = [".", "?", "!", ","]
+
+      // If text is empty or there are no forbidden words, return the original text.
+      if (text.length == 0 || !forbidden) {
+        return text
+      }
+      // Replace each word in text that is included in the forbidden array with a string of "x" characters of equal length to the forbidden word.
+      text = replaceForbiddenWords(text, forbidden)
+
+      // Ensure no punctuation is used in the text.
+      text = removePunch(text, punctuation)
+      return text
 
     }
 
     // 👉 CHALLENGE 5 (bonus, NOT graded)
     function normalizePhoneNumber(num) {
+      // You can assume that all entries will be exactly 10 digits long.
+      if (num.length !== 10) {
+        return "invalid phone number" // just incase
+      }
 
+      const areaCode = String(num).substring(0, 3)
+      const prefix = String(num).substring(3, 6)
+      const lineNum = String(num).substring(6)
+
+      // Format the input string num into the phone number format: "(XXX) XXX-XXXX".
+      return `(${areaCode}) ${prefix}-${lineNum}`
     }
 
     // 👉 CHALLENGE 6 (bonus, NOT graded)
+    // Simulate rolling a six-sided die.
+    function rollSixSidedDie() {
+      // Generate a random number between 1 and 6 (inclusive)
+      const randomNumber = Math.floor(Math.random() * 6) + 1;
+      // Utilize Math.random to simulate each die roll, ensuring it returns a number from 1 to 6. You can read about how Math.random works here.
+      return randomNumber;
+    }
+
     function diceRolls() {
 
+      // Keep track of the total number of rolls (throws) and the consecutive number of sixes (counter).
+      let counter = 0;
+      let notSix = true;
+      // Continue rolling until three consecutive rolls result in a six.
+      // Implement a while(true) loop to roll the dice indefinitely.
+      while (notSix) {
+        let sumCount;
+
+        for (let i = 0; i < 3; i++) {
+          sumCount = 0;
+          let result = rollSixSidedDie();
+          console.log("Roll", i + 1, ": ", result);
+          sumCount = sumCount + result
+          counter++
+        }
+
+
+        // Break out of the loop once three consecutive sixes are rolled to avoid an infinite loop.
+        if (sumCount === 6) {
+          notSix = false
+        }
+      }
+      // Return the total number of rolls it took to achieve three consecutive sixes.
+      console.log({ counter })
+      return counter
     }
+
+    diceRolls()
 
     // 🧪 DO NOT make any changes below this line ===================
     globalThis.challengeVersion = 1
